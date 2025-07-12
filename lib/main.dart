@@ -1,5 +1,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/page/favorite.dart' show FavoritePage;
+import 'package:flutter_application_1/page/generator.dart' show GeneratorPage;
 import 'package:provider/provider.dart';
 
 void main() {
@@ -17,8 +19,10 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(0, 255, 0, 1.0)),
-          fontFamily: 'Raleway'
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Color.fromRGBO(0, 255, 0, 1.0),
+          ),
+          fontFamily: 'Raleway',
         ),
         home: MyHomePage(),
       ),
@@ -44,67 +48,65 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GeneratedText(),
-            BigCard(pair: pair),
-            SizedBox(height: 10),
-          ElevatedButton(
-            style: TextButton.styleFrom(foregroundColor: Colors.green),
-            onPressed: (){
-              appState.getNext();
-            },
-            child: Text("next"),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class GeneratedText extends StatelessWidget {
-  const GeneratedText({
-    super.key,
-  });
+class _MyHomePageState extends State<MyHomePage> {
+  var selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('A random idea now:'));
-  }
-}
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+      case 1:
+        page = FavoritePage();
+      default:
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
 
-class BigCard extends StatelessWidget {
-  const BigCard({
-    super.key,
-    required this.pair,
-  });
-
-  final WordPair pair;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final style = theme.textTheme.displayMedium!.copyWith(color:theme.colorScheme.onPrimary);
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          semanticsLabel: "${pair.first} ${pair.second}",
-          "${pair.first} ${pair.second}",
-          style: style),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Scaffold(
+          body: Center(
+            child: Row(
+              children: [
+                SafeArea(
+                  child: NavigationRail(
+                    extended: constraints.maxWidth >= 600,
+                    destinations: [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.home),
+                        label: Text('Home'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.favorite),
+                        label: Text('Favorites'),
+                      ),
+                    ],
+                    selectedIndex: selectedIndex, // ← Change to this.
+                    onDestinationSelected: (value) {
+                      // ↓ Replace print with this.
+                      setState(() {
+                        selectedIndex = value;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    child: page,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
