@@ -1,6 +1,6 @@
 import 'package:english_words/english_words.dart' show WordPair;
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/buttons/favoriteButton.dart'
+import 'package:flutter_application_1/buttons/favorite_button.dart'
     show FavoriteButton;
 import 'package:flutter_application_1/main.dart';
 import 'package:provider/provider.dart';
