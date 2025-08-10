@@ -2,6 +2,7 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/page/favorite.dart' show FavoritePage;
 import 'package:flutter_application_1/page/generator.dart' show GeneratorPage;
+import 'package:flutter_application_1/page/login.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -61,8 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = GeneratorPage();
+        page = LoginPage();
       case 1:
+        page = GeneratorPage();
+      case 2:
         page = FavoritePage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -84,6 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.favorite),
+                        label: Text('Generator'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.star),
                         label: Text('Favorites'),
                       ),
                     ],
